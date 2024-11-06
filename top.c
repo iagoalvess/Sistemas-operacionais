@@ -1,13 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <signal.h>
 #include <string.h>
 #include <pwd.h>
 #include <time.h>
+#include <pthread.h>
 
-int main () {
 
-    while(1) {
+
+void* loop_infinito() {
+
+     while(1) {
 
         system("clear");
 
@@ -16,8 +20,8 @@ int main () {
         if(fp == NULL)
             perror("Erro ao executar o comando\n");
         
-        printf("PID        | User       | PROCNAME   | Estado     |\n");
-        printf("-----------|------------|------------|------------|\n");
+        printf("PID            | User           | PROCNAME       | Estado         |\n");
+        printf("---------------|----------------|----------------|----------------|\n");
 
         char linha[500];
         int pid = -1;
@@ -53,7 +57,7 @@ int main () {
 
                 if (strcmp(proc_nome, "") != 0 && estado != '\0' && pid != -1 && strcmp(user, "") != 0) {
 
-                    printf("%-10d | %-10s | %-10s | %-10c |\n", pid, user, proc_nome, estado);
+                    printf("%-14d | %-14s | %-14s | %-14c |\n", pid, user, proc_nome, estado);
                     pid = -1; strcpy(proc_nome, ""); 
                     estado = '\0'; strcpy(user, "");
                     vinte = vinte + 1;
@@ -61,11 +65,7 @@ int main () {
 
                 if (vinte == 20) {
                     
-                    sleep(1);
-                    system("clear");
-                    printf("PID        | User       | PROCNAME   | Estado     |\n");
-                    printf("-----------|------------|------------|------------|\n");
-                    vinte = 0;
+                   break;
                 }
                 
             }
@@ -73,6 +73,48 @@ int main () {
             sleep(1);
             pclose(fp);
     }
+
+}
+
+void* input () {
+
+    while(1) {  
+
+        int pid;
+        int tipo_sinal;
+      
+        scanf("%i %i", &pid, &tipo_sinal);
+      
+        if (kill(pid, tipo_sinal) == 0) {
+                printf("Sinal enviado para o processo %d\n", pid);
+        } else {
+                perror("Erro ao enviar sinal");
+        }
+
+    }
+}
+
+
+
+int main () {
+
+
+    pthread_t thread1, thread2;
+
+    if (pthread_create(&thread1, NULL, loop_infinito, NULL) != 0) {
+        perror("Erro ao criar thread 1");
+        return 1;
+    }
+
+    if (pthread_create(&thread2, NULL, input, NULL) != 0) {
+        perror("Erro ao criar thread 2");
+        return 1;
+    }
+
+
+
+    pthread_join(thread1, NULL);
+    pthread_join(thread2, NULL);
     
     return 0;
 }
