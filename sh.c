@@ -162,10 +162,15 @@ main(void)
     /* TAREFA1: O que faz o if abaixo e por que ele é necessário?
      * Insira sua resposta no código e modifique o fprintf abaixo
      * para reportar o erro corretamente. */
+    /*Resposta: O primeiro if verifica se o comando passado pelo usuário que está no buf é o cd, 
+    sendo esse comando usado para mudança de diretório*/
     if(buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' '){
       buf[strlen(buf)-1] = 0;
+      /*Resposta: esse if verifica se a mudança de diretório foi bem sucedida, 
+      sendo o caminho do dietório especificado por buf+3. Nesse contexto, a função chdir irá retornar um valor negativo
+      caso o diretório especificado não exista, não haja permissão para essa mudança, por exemplo.*/
       if(chdir(buf+3) < 0)
-        fprintf(stderr, "reporte erro\n");
+        fprintf(stderr, "Erro ao tentar acessar o diretório requerido\n");
       continue;
     }
     /* MARK END task1 */
