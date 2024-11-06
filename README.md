@@ -18,7 +18,7 @@ Este projeto apresenta dois programas em C para manipulação e monitoramento de
   
 - **meutop**: Executável gerado a partir do `top.c`. Este programa mostra uma tabela com os 20 principais processos e permite encerrá-los, usando a seguinte regra:
   - `<pid> <sinal>` - onde `<pid>` é o identificador do processo, e `<sinal>` representa o sinal enviado para o processo, como `1` (SIGHUP) para encerrar imediatamente.
-  - É importante pontuar que por o programa limpar a tela para atualizar a lista a cada 1 segundo, quando o usuário escrever o pid e o sinal provavelmente eles ou parte deles irão desaparecer da tela, por serem limpos juntamente com a tabela, porém, isso não interfere na execução do comando.
+  - É importante pontuar que, por o programa limpar a tela para atualizar a lista a cada 1 segundo, quando o usuário escrever o pid e o sinal provavelmente eles ou parte deles irão desaparecer da tela, por serem limpos juntamente com a tabela, porém, isso não interfere na execução do comando.
 
 ## Rodar
 
