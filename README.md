@@ -1,18 +1,27 @@
-# Projeto
+# Projeto de Manipulação de Processos
 
 ## Descrição
 
-Esse projeto apresenta dois programas relacionados com a manipulação de processos em um sistema operacional.
+Este projeto apresenta dois programas em C para manipulação e monitoramento de processos em um sistema operacional, simulando funcionalidades comuns de um shell e do comando `top` do Linux.
 
 ## Programas
-- sh.c: implementação de um mini shell, em que é possível executar comandos como ls e cat.
-- top.c: implementação semelhante ao comando top do Linux que permite encerrar processos.
+
+- **sh.c**: Implementação de um mini shell, permitindo a execução de comandos básicos, como `ls` e `cat`. Esse shell simula a interação com o sistema, possibilitando ao usuário executar comandos e redirecionar saídas.
+- **top.c**: Implementação semelhante ao comando `top` do Linux, exibindo uma tabela dos processos em execução. Permite ao usuário visualizar informações e encerrar processos específicos.
 
 ## Executáveis
-- myshell: executável do programa sh.c, em que é possível realizar comandos como: "ls", "cat sh.c" e "echo "DCC605 is cool" > x.txt";
-- meutop: executável do programa top.c, em que é possível ver a tabela dos top 20 processos e encerrá-los a partir da seguinte regra: <pid> <sinal>.
 
-## Para rodar os executáveis:
+- **myshell**: Executável gerado a partir do `sh.c`. Com ele, é possível rodar comandos diretamente, como:
+  - `ls` - lista arquivos e diretórios.
+  - `cat sh.c` - exibe o conteúdo do arquivo `sh.c`.
+  - `echo "DCC605 is cool" > x.txt` - cria ou escreve em `x.txt`.
+  
+- **meutop**: Executável gerado a partir do `top.c`. Este programa mostra uma tabela com os 20 principais processos e permite encerrá-los, usando a seguinte sintaxe:
+  - `<pid> <sinal>` - onde `<pid>` é o identificador do processo, e `<sinal>` representa o sinal enviado para o processo, como `9` (SIGKILL) para encerrar imediatamente.
+
+## Rodar
+
+Para rodar os programas, utilize os seguintes comandos:
 
 ```bash
 ./myshell
