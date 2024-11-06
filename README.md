@@ -1,5 +1,9 @@
 # Projeto de Manipulação de Processos
 
+##Autores
+- Vitor Moreira Ramos de Rezende
+- Iago da Silva Rodrigues Alves
+
 ## Descrição
 
 Este projeto apresenta dois programas em C para manipulação e monitoramento de processos em um sistema operacional, simulando funcionalidades comuns de um shell e do comando `top` do Linux.
