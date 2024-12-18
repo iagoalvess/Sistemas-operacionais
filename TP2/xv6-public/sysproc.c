@@ -6,6 +6,7 @@
 #include "memlayout.h"
 #include "mmu.h"
 #include "proc.h"
+#include "virt2real.h"
 
 int
 sys_fork(void)
@@ -97,4 +98,27 @@ sys_date(void)
   argptr(0, (void*)(&ptr), sizeof(struct rtcdate*));
   cmostime(ptr);
   return 0;
+}
+
+int 
+sys_virt2real(void)
+{
+  uint virtual_address;
+  argint(0, (int*)&virtual_address);
+
+  pde_t *pgdir = myproc()->pgdir;
+  
+  pde_t pde = pgdir[PDX(virtual_address)];
+  if (!(pde & PTE_P)) {
+    return -1;
+  }
+
+  pte_t *pt = (pte_t*)P2V(PTE_ADDR(pde));
+  pte_t pte = pt[PTX(virtual_address)];
+  if (!(pte & PTE_P)) {
+    return -1;
+  }
+
+  uint physical_address = PTE_ADDR(pte) | (virtual_address & 0xFFF);
+  return physical_address;
 }
