@@ -94,9 +94,12 @@ sys_uptime(void)
 int
 sys_date(void)
 {
-  struct rtcdate *ptr;
-  argptr(0, (void*)(&ptr), sizeof(struct rtcdate*));
-  cmostime(ptr);
+  char *ptr;
+  argptr(0, &ptr, sizeof(struct rtcdate*));
+  // seu código aqui
+  struct rtcdate* date_result = (struct rtcdate*) ptr;
+  cmostime(date_result);
+  
   return 0;
 }
 
