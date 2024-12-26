@@ -9,8 +9,7 @@ char *
 convert_address(char *v_address)
 {
   char *physical_address = virt2real(v_address);
-
-  printf(STDOUT, "Virtual address: %d\n", v_address);
+  
   printf(STDOUT, "Physical address: %p\n", physical_address);
 
   return physical_address;
