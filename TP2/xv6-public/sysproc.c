@@ -125,3 +125,11 @@ sys_virt2real(void)
   uint physical_address = PTE_ADDR(pte) | (virtual_address & 0xFFF);
   return physical_address;
 }
+
+int sys_num_pages(void) {
+
+    struct proc *current_proc = myproc();
+
+    return PGROUNDUP(current_proc->sz)/PGSIZE;
+}
+
