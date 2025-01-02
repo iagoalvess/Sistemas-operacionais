@@ -9,9 +9,6 @@
 #include "mmu.h"
 #include "spinlock.h"
 
-#define MAX_PAGES (PHYSTOP / PGSIZE)
-static int ref_count[MAX_PAGES];
-
 void freerange(void *vstart, void *vend);
 extern char end[]; // first address after kernel loaded from ELF file
                    // defined by the kernel linker script in kernel.ld
@@ -67,11 +64,6 @@ kfree(char *v)
   if((uint)v % PGSIZE || v < end || V2P(v) >= PHYSTOP)
     panic("kfree");
 
-  uint pa = V2P(v);
-  if(--ref_count[pa / PGSIZE] > 0) {
-    return;
-  }
-
   // Fill with junk to catch dangling refs.
   memset(v, 1, PGSIZE);
 
@@ -95,21 +87,9 @@ kalloc(void)
   if(kmem.use_lock)
     acquire(&kmem.lock);
   r = kmem.freelist;
-  if(r) {
+  if(r)
     kmem.freelist = r->next;
-    uint pa = V2P((char*)r);
-    ref_count[pa / PGSIZE] = 1;
-  }
   if(kmem.use_lock)
     release(&kmem.lock);
   return (char*)r;
-}
-
-void
-increment_ref_count(char *v)
-{
-  uint pa = V2P(v);
-  acquire(&kmem.lock);
-  ref_count[pa / PGSIZE]++;
-  release(&kmem.lock);
 }
