@@ -133,3 +133,8 @@ int sys_num_pages(void) {
     return PGROUNDUP(current_proc->sz)/PGSIZE;
 }
 
+int
+sys_forkcow(void)
+{
+  return forkcow();
+}

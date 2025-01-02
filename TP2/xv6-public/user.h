@@ -26,6 +26,7 @@ int uptime(void);
 int date(void*);
 char* virt2real(void *va);
 int num_pages(void);
+int forkcow(void);
 
 // ulib.c
 int stat(const char*, struct stat*);

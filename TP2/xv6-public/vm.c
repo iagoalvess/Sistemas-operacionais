@@ -10,6 +10,9 @@
 extern char data[];  // defined by kernel.ld
 pde_t *kpgdir;  // for use in scheduler()
 
+#define MAX_PAGES (PHYSTOP / PGSIZE)
+static int ref_count[MAX_PAGES];
+
 // Set up CPU's kernel segment descriptors.
 // Run once on entry on each CPU.
 void
@@ -383,6 +386,111 @@ copyout(pde_t *pgdir, uint va, void *p, uint len)
     va = va0 + PGSIZE;
   }
   return 0;
+}
+
+pde_t*
+copyuvmcow(pde_t *pgdir, uint sz)
+{
+  pde_t *d;
+  pte_t *pte;
+  uint pa, i, flags;
+
+  if((d = setupkvm()) == 0)
+    return 0;
+  for(i = 0; i < sz; i += PGSIZE){
+    if((pte = walkpgdir(pgdir, (void *) i, 0)) == 0)
+      panic("copyuvmcow: pte should exist");
+    if(!(*pte & PTE_P))
+      panic("copyuvmcow: page not present");
+    
+    *pte &= ~PTE_W; //somente leitura
+    *pte |=  PTE_COW;
+
+    pa = PTE_ADDR(*pte);
+    flags = PTE_FLAGS(*pte);
+
+    ++ref_count[pa / PGSIZE]; //contar referências
+   
+    if(mappages(d, (void*)i, PGSIZE, pa, flags) < 0) { //o endereço físico pa(do pai) será mapeado para o endereço virtual i(do filho) no diretório d do filho
+      goto bad;
+    }
+  }
+
+  lcr3(V2P(pgdir));
+  return d;
+
+bad:
+
+  lcr3(V2P(pgdir));
+  freevm(d);
+  return 0;
+}
+
+
+void pagefault(uint err) {
+
+  struct proc *current_proc = myproc();
+  uint va = rcr2();
+
+  if(current_proc == 0) { //verificando se há um processo
+    panic("Pagefault: page fault with no process");
+  }
+
+  if (!(err & 0x2)) { //verificando se a falha é de escrita
+    //panic("Pagefault: page fault is not of the write type.");
+    return;
+  }
+
+  if(va >= KERNBASE) { //se o endereço ultrapassou o limite estabelecido para a memória de usuário
+    panic("Pagefault: Restricted memory access.");
+  }
+
+  pte_t* pte = walkpgdir(current_proc->pgdir, (void*)va, 0);
+
+  if(pte == 0) { //verificando se há a tabela de páginas
+    panic("Page fault: Restricted memory access.");
+  }
+
+  if(!(*pte & PTE_P) || !(*pte & PTE_U)) { //verificando permissões
+    panic("Page fault: Restricted memory access.");
+  }
+
+  if(!(*pte & PTE_COW) || (*pte & PTE_W)) { //se é copy-on-write e se é permitido escrever
+    panic("Page fault: Invalid address accessed");
+  }
+
+  uint pa = PTE_ADDR(*pte);
+  //cprintf("1Page fault at va: %x, ref_count: %d, pte: %x\n", va, ref_count[pa / PGSIZE], *pte);
+
+  if (ref_count[pa / PGSIZE] > 1) {
+    //cprintf("2Page fault at va: %x, ref_count: %d, pte: %x\n", va, ref_count[pa / PGSIZE], *pte);
+    char *mem;
+
+    if((mem = kalloc()) == 0)
+      panic("Page fault");
+    
+    memmove(mem, (char*)P2V(pa), PGSIZE);
+
+    *pte = V2P(mem) | PTE_P | PTE_U | PTE_W;
+
+    --ref_count[pa / PGSIZE];
+    ++ref_count[V2P(mem) / PGSIZE];
+
+
+  } else if (ref_count[pa / PGSIZE] == 1) {
+
+    *pte |= PTE_W; 
+    *pte &= ~PTE_COW;
+    
+  }  else{
+     #//cprintf("3Page fault at va: %x, ref_count: %d, pte: %x\n", va, ref_count[pa / PGSIZE], *pte);
+      panic("Page fault 1");
+  }
+
+
+  lcr3(V2P(current_proc->pgdir));
+  return;
+
 }
 
 //PAGEBREAK!

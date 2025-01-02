@@ -184,6 +184,8 @@ UPROGS=\
 	_date\
 	_virt2real\
 	_num_pages\
+	_forkcow\
+	_corretor\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
