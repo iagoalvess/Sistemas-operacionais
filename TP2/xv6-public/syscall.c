@@ -133,7 +133,7 @@ static int (*syscalls[])(void) = {
 [SYS_date]    sys_date,
 [SYS_virt2real] sys_virt2real,
 [SYS_num_pages]   sys_num_pages,
-[SYS_fork]    sys_forkcow,
+[SYS_forkcow]    sys_forkcow,
 
 };
 

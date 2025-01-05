@@ -192,6 +192,9 @@ inituvm(pde_t *pgdir, char *init, uint sz)
   mem = kalloc();
   memset(mem, 0, PGSIZE);
   mappages(pgdir, 0, PGSIZE, V2P(mem), PTE_W|PTE_U);
+
+  ++ref_count[V2P(mem)/PGSIZE]; //contagem de referência
+
   memmove(mem, init, sz);
 }
 
@@ -247,6 +250,8 @@ allocuvm(pde_t *pgdir, uint oldsz, uint newsz)
       kfree(mem);
       return 0;
     }
+
+    ++ref_count[V2P(mem)/PGSIZE]; //contagem de referência
   }
   return newsz;
 }
@@ -273,8 +278,12 @@ deallocuvm(pde_t *pgdir, uint oldsz, uint newsz)
       pa = PTE_ADDR(*pte);
       if(pa == 0)
         panic("kfree");
-      char *v = P2V(pa);
-      kfree(v);
+      
+      if((--ref_count[pa/PGSIZE]) == 0) { //contagem de referência
+          char *v = P2V(pa);
+          kfree(v);
+      }
+      
       *pte = 0;
     }
   }
@@ -431,6 +440,7 @@ void pagefault(uint err) {
 
   struct proc *current_proc = myproc();
   uint va = rcr2();
+  pte_t* pte;
 
   if(current_proc == 0) { //verificando se há um processo
     panic("Pagefault: page fault with no process");
@@ -445,9 +455,7 @@ void pagefault(uint err) {
     panic("Pagefault: Restricted memory access.");
   }
 
-  pte_t* pte = walkpgdir(current_proc->pgdir, (void*)va, 0);
-
-  if(pte == 0) { //verificando se há a tabela de páginas
+  if((pte = walkpgdir(current_proc->pgdir, (void*)va, 0)) == 0) { //verificando se há a tabela de páginas
     panic("Page fault: Restricted memory access.");
   }
 
@@ -484,7 +492,7 @@ void pagefault(uint err) {
     
   }  else{
      #//cprintf("3Page fault at va: %x, ref_count: %d, pte: %x\n", va, ref_count[pa / PGSIZE], *pte);
-      panic("Page fault 1");
+      panic("Page fault");
   }
 
 
