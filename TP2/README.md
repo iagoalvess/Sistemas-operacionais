@@ -1,4 +1,9 @@
-# TP2 - Sistemas Operacionais - 2024/2 Iago e Vitor Moreira
+# TP2 - Sistemas Operacionais - 2024/2 
+
+##Membros
+
+- Iago da Silva Rodrigues Alves;
+- Vitor Moreira Ramos de Rezende.
 
 ## Introdução
 O TP2 foi dividido em três partes principais:
@@ -19,15 +24,17 @@ O TP2 foi dividido em três partes principais:
 
 ### Parte 2: Implementação das Chamadas `virt2real` e `num_pages`
 1. **`num_pages`**:  
-   - A chamada calcula o número de páginas usadas por um processo
+   - A chamada calcula o número de páginas usadas por um processo.
 
 2. **`virt2real`**:  
-   - A chamada recebe um endereço virtual e retorna o real:
+   - A chamada recebe um endereço virtual e retorna o real.
 
 ---
 
 ### Parte 3: Implementação do Copy-on-Write com `forkcow`
-   - Foi criada a chamada `forkcow`, semelhante a `fork`, mas utilizando `copyuvmcow` em vez de `copyuvm`.
+   - Foi criada a chamada `forkcow`, semelhante a `fork`, porém, diferentemente do `fork`, o intuito dessa chamada é que o filho referencie as páginas físicas do pai, em vez de criar novas páginas imediatamente a sua criação;
+   - Para tanto, criamos o `copyuvmcow`, uma modificação do `copyuvm`, e o `pagefault`, necessário para tratar o caso em que o filho tenta ecrever na página compartilhada com o pai, que deveria ser apenas de leitura;
+   - Além disso, modificamos outros arquivos. 
 
 ---
 
