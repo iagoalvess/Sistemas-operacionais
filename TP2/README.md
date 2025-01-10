@@ -4,7 +4,7 @@
 O TP2 foi dividido em três partes principais:
 
 1. **Tutorial inicial**
-2. **Novas chamadas**
+3. **Copy-on-Write**
 3. **Copy-on-Write**
 
 ---
