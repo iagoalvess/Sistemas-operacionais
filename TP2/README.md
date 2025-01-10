@@ -1,6 +1,6 @@
 # TP2 - Sistemas Operacionais - 2024/2 
 
-##Membros
+## Membros
 
 - Iago da Silva Rodrigues Alves;
 - Vitor Moreira Ramos de Rezende.
@@ -23,6 +23,7 @@ O TP2 foi dividido em três partes principais:
 ---
 
 ### Parte 2: Implementação das Chamadas `virt2real` e `num_pages`
+
 1. **`num_pages`**:  
    - A chamada calcula o número de páginas usadas por um processo.
 
