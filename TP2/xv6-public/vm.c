@@ -278,8 +278,10 @@ deallocuvm(pde_t *pgdir, uint oldsz, uint newsz)
       pa = PTE_ADDR(*pte);
       if(pa == 0)
         panic("kfree");
-      
-      if((--ref_count[pa/PGSIZE]) == 0) { //contagem de referência
+
+      --ref_count[pa/PGSIZE];
+
+      if((ref_count[pa/PGSIZE]) == 0) { //contagem de referência
           char *v = P2V(pa);
           kfree(v);
       }
@@ -436,7 +438,7 @@ bad:
 }
 
 
-void pagefault(uint err) {
+void pagefault() {
 
   struct proc *current_proc = myproc();
   uint va = rcr2();
@@ -444,11 +446,6 @@ void pagefault(uint err) {
 
   if(current_proc == 0) { //verificando se há um processo
     panic("Pagefault: page fault with no process");
-  }
-
-  if (!(err & 0x2)) { //verificando se a falha é de escrita
-    //panic("Pagefault: page fault is not of the write type.");
-    return;
   }
 
   if(va >= KERNBASE) { //se o endereço ultrapassou o limite estabelecido para a memória de usuário

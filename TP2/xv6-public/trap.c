@@ -48,7 +48,8 @@ trap(struct trapframe *tf)
 
   switch(tf->trapno){
   case T_PGFLT:
-    pagefault(tf->err);
+    if ((tf->err & 0x2))
+      pagefault();
     break;
   case T_IRQ0 + IRQ_TIMER:
     if(cpuid() == 0){
