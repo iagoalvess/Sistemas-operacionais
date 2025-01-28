@@ -15,7 +15,7 @@
 #define EXT2_BLOCK_SIZE 1024
 #define NAMELEN 255
 
-unsigned char *disk;
+    unsigned char *disk;
 
 void read_superblock(FILE *img)
 {
