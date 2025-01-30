@@ -535,4 +535,9 @@ enum {
 	EXT2_FT_MAX
 };
 
-#define EXT2_SUPERBLOCK_OFFSET 1024
+#define EXT2_S_IFDIR 0x4000
+#define BASE_OFFSET 1024
+#define NAMELEN 255
+#define EXT2_NDIR_BLOCKS 12
+#define BLOCK_OFFSET(block) (BASE_OFFSET + (block - 1) * g_state.block_size)
+#define MAX_PATH_LEN 4096
