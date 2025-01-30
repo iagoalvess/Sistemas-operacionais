@@ -15,7 +15,27 @@
 #define EXT2_BLOCK_SIZE 1024
 #define NAMELEN 255
 
-    unsigned char *disk;
+unsigned char *disk;
+
+void stat_file(int fd, int inode_no, const struct ext2_group_desc *block_group, int block_size)
+{
+  struct ext2_inode inode;
+  lseek(fd, BLOCK_OFFSET(block_group->bg_inode_table) + (inode_no - 1) * sizeof(struct ext2_inode), SEEK_SET);
+  read(fd, &inode, sizeof(struct ext2_inode));
+
+  printf("\nFile Metadata (stat):\n");
+  printf("----------------------------\n");
+  printf("Inode: %d\n", inode_no);
+  printf("Size: %u bytes\n", inode.i_size);
+  printf("Blocks: %u\n", inode.i_blocks);
+  printf("Links: %u\n", inode.i_links_count);
+  printf("Mode: %o\n", inode.i_mode);
+  printf("UID: %u\n", inode.i_uid);
+  printf("GID: %u\n", inode.i_gid);
+  printf("Access Time: %u\n", inode.i_atime);
+  printf("Modification Time: %u\n", inode.i_mtime);
+  printf("Creation Time: %u\n", inode.i_ctime);
+}
 
 void read_superblock(FILE *img)
 {
@@ -147,6 +167,7 @@ int main(int argc, char *argv[])
   {
     printf("\n1. Read Superblock (sb)\n");
     printf("2. List Directories (ls)\n");
+    printf("3. Get File Metadata (stat)\n");
     printf("5. Exit\n");
     printf("\n> ");
     int option;
@@ -166,6 +187,23 @@ int main(int argc, char *argv[])
       break;
     case 2:
       list_directories(argv[1]);
+      break;
+    case 3:
+      printf("Enter inode number: ");
+      int inode_no;
+      scanf("%d", &inode_no);
+
+      struct ext2_super_block sb;
+      lseek(img, BASE_OFFSET, SEEK_SET);
+      read(img, &sb, sizeof(struct ext2_super_block));
+
+      unsigned int block_size = 1024 << sb.s_log_block_size;
+      struct ext2_group_desc gd;
+      lseek(img, BASE_OFFSET + block_size, SEEK_SET);
+      read(img, &gd, sizeof(struct ext2_group_desc));
+
+      stat_file(img, inode_no, &gd, block_size);
+      close(img);
       break;
     case 5:
       printf("Bye!\n");
