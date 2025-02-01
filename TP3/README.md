@@ -30,15 +30,15 @@ O TP3 teve como objetivo a criação de um shell capaz de manipular sistemas de 
 
 ## Modo de usar:
 
-1. **Compilação**: gcc shell.c -o shell;
-2. **Execução**: ./shell sistema_arquivo_ext.img
-3. Especificações dos comandos:
-    - **`cd <diretório>`** - Muda para o diretório especificado;
-    - **`ls`** - Lista os arquivos e diretórios do diretório atual;
-    - **`find <diretório>`** - Imprime toda a árvore de arquivos/diretórios iniciando do diretório especificado;
-    - **`find`** - Imprime toda a árvore de arquivos/diretórios iniciando do diretório atual;
-    - **`stat <diretório>`** - Pega os metadados de um arquivo/diretório contido no diretório atual;
-    - **`sb`** - Lê os dados do super-bloco.
+1. **Compile**: gcc shell.c -o shell;
+2. **Execute**: ./shell sistema_arquivo_ext.img
+3. **Insira um dos comandos abaixo(Leve em conta a especificação acima)**:
+    - **`cd <diretório>`**;
+    - **`ls`**;
+    - **`find <diretório>`**;
+    - **`find`**;
+    - **`stat <diretório>`**;
+    - **`sb`**;
 
 ---
 
