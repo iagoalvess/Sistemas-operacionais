@@ -6,7 +6,7 @@
 - Vitor Moreira Ramos de Rezende.
 
 ## Introdução
-O TP3 teve como objetivo a criação de um shell capaz de manipular um sistema de arquivo ext2 contido em extensões do tipo `.img`, a partir da manipulação de inodes.
+O TP3 teve como objetivo a criação de um shell capaz de manipular sistemas de arquivos ext2 contidos em extensões do tipo `.img`, a partir da manipulação de inodes.
 
 ---
 
