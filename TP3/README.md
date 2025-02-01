@@ -12,7 +12,7 @@ O TP3 teve como objetivo a criação de um shell capaz de manipular sistemas de 
 
 ## Comandos implementados:
 
-### Parte 1: Comando obrigatórios e suas especificações:
+### Parte 1: Comandos obrigatórios e suas especificações:
 - **`cd <diretório>`** - Muda para o diretório especificado;
 - **`ls`** - Lista os arquivos e diretórios do diretório atual;
 - **`find <diretório>`** - Imprime toda a árvore de arquivos/diretórios iniciando do diretório especificado;
