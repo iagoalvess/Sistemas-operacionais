@@ -1,4 +1,4 @@
-# TP2 - Sistemas Operacionais - 2024/2 
+# TP3 - Sistemas Operacionais - 2024/2 
 
 ## Membros
 
@@ -6,44 +6,38 @@
 - Vitor Moreira Ramos de Rezende.
 
 ## Introdução
-O TP2 foi dividido em três partes principais:
-
-1. **Tutorial inicial**
-3. **Novas chamadas**
-3. **Copy-on-Write**
+O TP3 teve como objetivo a criação de um shell capaz de manipular um sistema de arquivo ext2 contido em extensões do tipo `.img`, a partir da manipulação de inodes.
 
 ---
 
-## Implementação
+## Comandos implementados:
 
-### Parte 1: Adição de uma Chamada Simples
-- Seguindo o tutorial, foi implementada a chamada `sys_date`:
-  - Um programa simples foi criado para exibir a data no formato `dd/mm/aaaa hh:mm:ss`.
+### Parte 1: Comando obrigatórios:
+- **`cd <diretório>`** - Muda para o diretório especificado;
+- **`ls`** - Lista os arquivos e diretórios do diretório atual;
+- **`find <diretório>`** - Imprime toda a árvore de arquivos/diretórios iniciando do diretório especificado;
+- **`find`** - Imprime toda a árvore de arquivos/diretórios iniciando do diretório atual;
+- **`stat <diretório>`** - Pega os metadados de um arquivo/diretório contido no diretório atual;
+- **`sb`** - Lê os dados do super-bloco.
+---
+### Parte 2: Extras:
 
+- **`clear`** - Limpa a tela do shell;
+- **`help`** - Imprime os comandos disponíveis;
+- **`exit`** - Encerra o shell.
+  
 ---
 
-### Parte 2: Implementação das Chamadas `virt2real` e `num_pages`
+## Modo de usar:
 
-1. **`num_pages`**:  
-   - A chamada calcula o número de páginas usadas por um processo.
-
-2. **`virt2real`**:  
-   - A chamada recebe um endereço virtual e retorna o real.
-
----
-
-### Parte 3: Implementação do Copy-on-Write com `forkcow`
-   - Foi criada a chamada `forkcow`, semelhante a `fork`, porém, diferentemente do `fork`, o intuito dessa chamada é que o filho referencie as páginas físicas do pai, em vez de criar novas páginas imediatamente a sua criação;
-   - Para tanto, criamos o `copyuvmcow`, uma modificação do `copyuvm`, e o `pagefault`, necessário para tratar o caso em que o filho tenta ecrever na página compartilhada com o pai, que deveria ser apenas de leitura;
-   - Além disso, modificamos outros arquivos. 
+1. **Compilação**: gcc shell.c -o shell;
+2. **Execução**: ./shell sistema_arquivo_ext.img
 
 ---
 
 ## Conclusão
 O trabalho permitiu:
-- Entender o mapeamento de diretórios de página e tabelas para endereços reais.
-- Compreender o uso de flags para restrições de acesso e tratamento de page faults.
-- Aprender sobre o funcionamento de `flush` do TLB para evitar inconsistências.
-- Observar o funcionamento completo de chamadas copy-on-write e sua implementação no xv6.
-
-Este projeto foi desenvolvido e testado em um ambiente Ubuntu 22 utilizando WSL (Windows Subsystem for Linux). Para compilar o sistema, basta executar os comandos `make` e `make qemu` no terminal. Após inicializar o sistema xv6, é possível testar a implementação utilizando os comandos `forktest` para validar o funcionamento da chamada `forkcow` e `corretor` para rodar os testes automáticos disponibilizados pelo corretor.
+- Compreender melhor o Fast File System (FFS);
+- Compreender melhor a manipulação dos inodes;
+- Compreender melhor como os arquivos e diretórios são armazenados;
+- Compreender melhor os comandos implementados.
