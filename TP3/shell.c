@@ -634,7 +634,7 @@ void ext2_help()
     printf("ls - Lista os arquivos e diretórios do diretório atual.\n");
     printf("find <diretório> - Imprime toda a árvore de arquivos/diretórios iniciando do diretório especificado. \n");
     printf("find - Imprime toda a árvore de arquivos/diretórios iniciando do diretório atual. \n");
-    printf("stat <diretório> - Pega os metadados de um arquivo/diretório contido no diretório atual\n");
+    printf("stat <diretório> - Pega os metadados de um arquivo/diretório contido no diretório atual.\n");
     printf("sb - Lê os dados do super-bloco.\n");
     printf("clear - Limpa a tela do shell.\n");
     printf("help - Imprime os comandos disponíveis.\n");
